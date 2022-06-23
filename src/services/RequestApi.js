@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const REACT_APP_MAIN_HOST = 'http://192.168.31.150:3012/';
+const REACT_APP_MAIN_HOST = 'https://amarsik-games-node.herokuapp.com/';
 
 const handleError = (error) => {
   throw error.response.data;
