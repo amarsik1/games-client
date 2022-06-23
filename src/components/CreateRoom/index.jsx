@@ -11,18 +11,14 @@ function Room() {
 
   useEffect(() => {
     const handleCreateRoom = async () => {
-      try {
-        const storageUuid = localStorage.getItem('uuid');
-        const hostUuid = storageUuid || v4();
+      const storageUuid = localStorage.getItem('uuid');
+      const hostUuid = storageUuid || v4();
 
-        if (!storageUuid) localStorage.setItem('uuid', hostUuid);
-        const [response] = await new RequestService('rooms/create').post({ hostUuid });
+      if (!storageUuid) localStorage.setItem('uuid', hostUuid);
+      const [response] = await new RequestService('rooms/create').post({ hostUuid });
 
-        setRoom(response);
-        socket.emit('joinToRoom', response._id);
-      } finally {
-        console.log('ok');
-      }
+      setRoom(response);
+      socket.emit('joinToRoom', response._id);
     };
 
     handleCreateRoom();

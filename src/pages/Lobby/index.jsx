@@ -1,14 +1,14 @@
 // import React from 'react';
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import Room from '../../components/CreateRoom';
 import WaitToAllPlayersReady from '../../components/WaitToAllPlayersReady';
-import RockPaperScissiors from '../../games/RockPaperScissors';
+// import RockPaperScissiors from '../../games/RockPaperScissors';
 import { gameScreens } from '../../games/gameList';
 import { useRoom } from '../../services/roomContext';
 // import App from '../../games/SpaceGame/App';
 
 const CreateRoom = () => {
-  const { room, setRoom } = useRoom();
+  const { room } = useRoom();
 
   const isAllPlayersReady = room && room.readyToRoundPlayers.every(Boolean);
 

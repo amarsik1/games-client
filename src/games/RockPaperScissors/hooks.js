@@ -14,12 +14,12 @@ import maleIdle from './assets/img/male_idle.svg';
 import rockSound from './assets/sound/rock.mp3';
 import paperSound from './assets/sound/slap.mp3';
 import scissorsSound from './assets/sound/scissors.mp3';
-import startSound from './assets/sound/start.mp3';
+// import startSound from './assets/sound/start.mp3';
 import confettiSound from './assets/sound/confetti.mp3';
 import loseSound from './assets/sound/lose.mp3';
 import RequestService from '../../services/RequestApi';
 
-const startSfx = new Audio(startSound);
+// const startSfx = new Audio(startSound);
 const confettiSfx = new Audio(confettiSound);
 const loseSfx = new Audio(loseSound);
 const rockSfx = new Audio(rockSound);
@@ -91,16 +91,16 @@ export const useRockPaperScissors = () => {
     return ui;
   };
 
-  const handleReset = () => {
-    startSfx.play();
-    setGameOver(false);
-    setFirstPlayerChoise(0);
-    setSecondPlayerPoints(0);
-    setSecondPlayerUIChoise(maleIdle);
-    setFirstPlayerUIChoise(femaleIdle);
-  };
+  // const handleReset = () => {
+  //   startSfx.play();
+  //   setGameOver(false);
+  //   setFirstPlayerChoise(0);
+  //   setSecondPlayerPoints(0);
+  //   setSecondPlayerUIChoise(maleIdle);
+  //   setFirstPlayerUIChoise(femaleIdle);
+  // };
 
-  console.log(players, firstPlayerChoise, secondPlayerChoise);
+  // console.log(players, firstPlayerChoise, secondPlayerChoise);
 
   useEffect(() => {
     const unsub = () => {
