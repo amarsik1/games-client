@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import QRCode from 'react-qr-code';
 import { v4 } from 'uuid';
 import RequestService from '../../services/RequestApi';
 import { useRoom } from '../../services/roomContext';
 import socket from '../../socket';
+import { getUniquePlayers } from './helpers';
 
 function Room() {
-  const [players, setPlayers] = useState([]);
   const { room, setRoom } = useRoom();
 
   useEffect(() => {
@@ -32,22 +32,30 @@ function Room() {
     if (!room) return;
 
     socket.on('playerConnected', (player) => {
-      setPlayers((prev) => [...prev, player]);
+      if (typeof player !== 'object') return;
+
+      setRoom((prev) => ({
+        ...prev,
+        players: getUniquePlayers([...prev.players, player]),
+      }));
     });
   }, [room]);
 
   useEffect(() => {
     const startGame = async () => {
+      const [{ id: gameId }] = room.games;
+
       await new RequestService('rooms/start-game').post({ roomId: room._id });
-      await new RequestService('rooms/set-active-game').post({ currentGameNumber: 1, roomId: room._id });
+      await new RequestService('rooms/set-active-game').post({ currentGameNumber: gameId, roomId: room._id });
+      setRoom((prev) => ({ ...prev, gameStarted: true, currentGameNumber: gameId }));
     };
 
-    if (players.length === 1) startGame();
-  }, [players, room]);
+    if (room?.players.length >= 1) startGame();
+  }, [room]);
 
   return (
     <div style={{ padding: '5px' }}>
-      {players.map(({ uuid, username }) => (
+      {room?.players.map(({ uuid, username }) => (
         <p key={uuid}>{username}</p>
       ))}
       {room && (
