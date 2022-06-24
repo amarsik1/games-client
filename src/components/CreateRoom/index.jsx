@@ -46,7 +46,7 @@ function Room() {
       setRoom((prev) => ({ ...prev, gameStarted: true, currentGameNumber: gameId }));
     };
 
-    if (room?.players.length >= 1) startGame();
+    if (room?.players.length >= 2) startGame();
   }, [room]);
 
   return (
