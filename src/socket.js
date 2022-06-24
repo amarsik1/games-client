@@ -1,5 +1,5 @@
 import { io } from 'socket.io-client';
 
-const way = 'https://amarsik-games-node.herokuapp.com:3012';
+const way = 'http://amarsik-games-node.herokuapp.com:3012';
 
 export default io(way, { transports: ['websocket'] });
