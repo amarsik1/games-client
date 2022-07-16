@@ -14,12 +14,12 @@ import maleIdle from './assets/img/male_idle.svg';
 import rockSound from './assets/sound/rock.mp3';
 import paperSound from './assets/sound/slap.mp3';
 import scissorsSound from './assets/sound/scissors.mp3';
-// import startSound from './assets/sound/start.mp3';
+import startSound from './assets/sound/start.mp3';
 import confettiSound from './assets/sound/confetti.mp3';
 import loseSound from './assets/sound/lose.mp3';
 import RequestService from '../../services/RequestApi';
 
-// const startSfx = new Audio(startSound);
+const startSfx = new Audio(startSound);
 const confettiSfx = new Audio(confettiSound);
 const loseSfx = new Audio(loseSound);
 const rockSfx = new Audio(rockSound);
@@ -40,6 +40,7 @@ export const useRockPaperScissors = () => {
   const [firstPlayerPoints, setFirstPlayerPoints] = useState(0);
   const [secondPlayerPoints, setSecondPlayerPoints] = useState(0);
 
+  const [roundWinner, setRoundWinner] = useState(null);
   const [result, setResult] = useState("Let's see who wins");
   const [gameOver, setGameOver] = useState(false);
 
@@ -67,6 +68,28 @@ export const useRockPaperScissors = () => {
     ]);
   }, [room]);
 
+  const updateRound = () => {
+    const player = players.find((item) => item.id === roundWinner);
+
+    setFirstPlayerChoise(null);
+    setSecondPlayerChoise(null);
+    setFirstPlayerUIChoise(maleIdle);
+    setSecondPlayerUIChoise(femaleIdle);
+    new RequestService('rooms/resend-action').post({
+      roomName: room._id,
+      eventName: 'RockPaperScissors-nextMove',
+      data: {
+        winner: player.uuid,
+      },
+    });
+  };
+
+  useEffect(() => {
+    if (!roundWinner !== null) return;
+
+    setTimeout(() => updateRound(), 2000);
+  }, [roundWinner, players]);
+
   const getUIChoise = (value, playerNumber) => {
     let ui = null;
 
@@ -91,16 +114,10 @@ export const useRockPaperScissors = () => {
     return ui;
   };
 
-  // const handleReset = () => {
-  //   startSfx.play();
-  //   setGameOver(false);
-  //   setFirstPlayerChoise(0);
-  //   setSecondPlayerPoints(0);
-  //   setSecondPlayerUIChoise(maleIdle);
-  //   setFirstPlayerUIChoise(femaleIdle);
-  // };
-
-  // console.log(players, firstPlayerChoise, secondPlayerChoise);
+  useEffect(() => {
+    document.body.focus();
+    startSfx.play();
+  }, []);
 
   useEffect(() => {
     const unsub = () => {
@@ -140,54 +157,48 @@ export const useRockPaperScissors = () => {
 
     const comboMoves = firstPlayerChoise + secondPlayerChoise;
     if (firstPlayerPoints <= 4 && secondPlayerPoints <= 4) {
-      if (
-        comboMoves === 'scissorspaper'
-        || comboMoves === 'rockscissors'
-        || comboMoves === 'paperrock'
-      ) {
-        const updatedUserPoints = firstPlayerPoints + 1;
-        setFirstPlayerPoints(updatedUserPoints);
+      switch (comboMoves) {
+        case 'scissorspaper':
+        case 'rockscissors':
+        case 'paperrock': {
+          setRoundWinner(1);
+          const updatedUserPoints = firstPlayerPoints + 1;
+          setFirstPlayerPoints(updatedUserPoints);
 
-        if (updatedUserPoints === 5) {
-          setResult('You Win');
-          const gameOff = true;
-          setTimeout(() => {
-            setGameOver(gameOff);
-            confettiSfx.play();
-          }, 1000);
+          if (updatedUserPoints === 5) {
+            setResult('You Win');
+            const gameOff = true;
+            setTimeout(() => {
+              setGameOver(gameOff);
+              confettiSfx.play();
+            }, 1000);
+          }
+          break;
         }
-      }
 
-      if (
-        comboMoves === 'paperscissors'
-        || comboMoves === 'scissorsrock'
-        || comboMoves === 'rockpaper'
-      ) {
-        // computerPoints.current += 1
-        const updatedComputerPoints = secondPlayerPoints + 1;
-        setSecondPlayerPoints(updatedComputerPoints);
+        case 'paperscissors':
+        case 'scissorsrock':
+        case 'rockpaper': {
+          setRoundWinner(2);
+          // computerPoints.current += 1
+          const updatedComputerPoints = secondPlayerPoints + 1;
+          setSecondPlayerPoints(updatedComputerPoints);
 
-        if (updatedComputerPoints === 5) {
-          setResult('You Lose');
-          const gameOff = true;
-          setTimeout(() => {
-            setGameOver(gameOff);
-            loseSfx.play();
-          }, 1000);
+          if (updatedComputerPoints === 5) {
+            setResult('You Lose');
+            const gameOff = true;
+            setTimeout(() => {
+              setGameOver(gameOff);
+              loseSfx.play();
+            }, 1000);
+          }
+          break;
         }
+        default: break;
       }
     }
 
-    setTimeout(() => {
-      setFirstPlayerChoise(null);
-      setSecondPlayerChoise(null);
-      setFirstPlayerUIChoise(maleIdle);
-      setSecondPlayerUIChoise(femaleIdle);
-      new RequestService('rooms/resend-action').post({
-        roomName: room._id,
-        eventName: 'RockPaperScissors-nextMove',
-      });
-    }, 2000);
+    updateRound();
   }, [firstPlayerChoise, secondPlayerChoise]);
 
   return {

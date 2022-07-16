@@ -1,18 +1,10 @@
 import { motion } from 'framer-motion';
-// import { useEffect, useState } from 'react';
-// import rockIcon from './assets/img/rock_icon.svg';
-// import paperIcon from './assets/img/paper_icon.svg';
-// import scissorsIcon from './assets/img/scissors_icon.svg';
-// import randomIcon from './assets/img/random_icon.svg';
-// import restart from './assets/img/restart.svg';
 import resultCpu from './assets/img/result_cpu.svg';
 import resultUser from './assets/img/result_user.svg';
 import userHpAvatar from './assets/img/user_hp_avatar.svg';
 import cpuHpAvatar from './assets/img/cpu_hp_avatar.svg';
 import './App.css';
 import { useRockPaperScissors } from './hooks';
-
-// const choices = ['rock', 'paper', 'scissors'];
 
 const RockPaperScissiors = ({
   onFinish,
@@ -54,8 +46,8 @@ const RockPaperScissiors = ({
                 </div>
                 <div className="bottom">
                   <motion.img
-                    src={firstPlayerChoise}
-                    key={firstPlayerUIChoise}
+                    src={firstPlayerUIChoise}
+                    key={firstPlayerChoise}
                     alt=""
                     transition={{ ease: 'easeOut', duration: 0.5 }}
                     initial={{ y: 200 }}
