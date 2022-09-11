@@ -1,0 +1,12 @@
+.question {
+
+  &_players {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  &_player {
+    width: 300px;
+  }
+}

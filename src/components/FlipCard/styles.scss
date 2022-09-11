@@ -1,0 +1,49 @@
+@mixin flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin card {
+  transition: 1s;
+  width: 200px;
+  height: 300px;
+  position: absolute;
+  border-radius: 20px;
+  backface-visibility: hidden;
+  @include flex;
+}
+
+.front, .back {
+  @include card;
+}
+
+.front {
+  background-color: gray;
+}
+  
+.back {
+  background-color: #ccc;
+  transform: rotateY(180deg);
+}
+
+.parent {
+  width: 200px;
+  margin: 10px;
+  height: 300px;
+
+  & * {
+    max-width: 100%;
+    max-height: 100%;
+  }
+
+  &.fliped {
+    .front {
+      transform: rotateY(180deg);
+    }
+    .back {
+      transform: rotateY(360deg);
+    }
+  }
+} 
+  

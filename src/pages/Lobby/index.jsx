@@ -1,38 +1,30 @@
-// import React from 'react';
 import { useMemo } from 'react';
-import Room from '../../components/CreateRoom';
-import WaitToAllPlayersReady from '../../components/WaitToAllPlayersReady';
-// import RockPaperScissiors from '../../games/RockPaperScissors';
-import { gameScreens } from '../../games/gameList';
+import Room from './components/Room';
 import { useRoom } from '../../services/roomContext';
-// import App from '../../games/SpaceGame/App';
+import { EMOTION, QUESTION } from '../../constants';
+import QuestionPart from '../../gameScenes/question';
+import EmotionScene from '../../gameScenes/emotion';
+
+const components = {
+  [QUESTION]: QuestionPart,
+  [EMOTION]: EmotionScene,
+};
 
 const CreateRoom = () => {
   const { room } = useRoom();
 
-  const isAllPlayersReady = room && room.readyToRoundPlayers.every(Boolean);
+  const Component = useMemo(() => {
+    if (!room) return () => {};
 
-  const gameItem = useMemo(() => (
-    gameScreens.find((item) => item.id === room?.currentGameNumber)
-  ), [room]);
+    return components[room.currentGameType];
+  }, [room]);
 
   if (!room?.gameStarted) return <Room />;
 
-  if (!isAllPlayersReady) {
-    return (
-      <WaitToAllPlayersReady
-        players={room.players}
-        readyPlayers={room.readyToRoundPlayers}
-      />
-    );
-  }
+  // if (room?.gameFinished) return <GameResults />;
 
   return (
-    <div>
-      {gameItem && (
-        <gameItem.Component />
-      )}
-    </div>
+    <Component />
   );
 };
 
