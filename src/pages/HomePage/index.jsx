@@ -28,7 +28,7 @@ const HomePage = () => {
   }, []);
 
   const handleReconnectToExistRoom = () => {
-    alert('comming soon');
+    // alert('comming soon');
   };
 
   const handleCreateRoom = () => {
